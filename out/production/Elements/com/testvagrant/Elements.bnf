@@ -1,0 +1,45 @@
+{
+    parserClass="com.testvagrant.parser.ElementsParser"
+
+    extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+    psiClassPrefix="Element"
+    psiImplClassSuffix="Impl"
+    psiPackage="com.testvagrant.psi"
+    psiImplPackage="com.testvagrant.psi.impl"
+
+    elementTypeHolderClass="com.testvagrant.token.ElementTokenTypes"
+    elementTypeClass="com.testvagrant.psi.ElementsElementType"
+    tokenTypeClass="com.testvagrant.psi.ElementsTokenType"
+     tokens = [
+        space='regexp:\s+|\n|\t'
+        string = "regexp:\"[^\"]*\"|'[^']*'"
+        elementValue="elements"
+        number = "regexp:(\+|\-)?\p{Digit}*"
+        id = "regexp:\p{Alpha}\w*"
+        comma = ","
+        colon = ":"
+        brace1 = "{"
+        brace2 = "}"
+        brack1 = "["
+        brack2 = "]"
+        quote="regexp:\""
+      ]
+}
+
+root ::= elements
+elementJson ::= elementObject
+elements ::= elementsObject
+elementsObject ::= '{' [space] [! '}'  elementValue ':' [space] elementsArray ] [space] '}' {pin(".*")=1 extends=elementJson}
+values ::= string
+elementsArray::='['[!']' item (!']' ',' item) *] [space]']'  {pin(".*")=1 extends=elementsArray}
+private item ::= [space] elementJson [space] {recoverWhile=recover}
+elementObject ::= '{' [space] [! '}'  prop  (! '}'  ',' [space]  prop1 ) (! '}'  ',' [space] prop2 ) (! '}' ',' [space] prop3 ) ]  [space] '}' {pin(".*")=1 extends=elementJson}
+elementObject1 ::= '{' [space] [! '}'  prop6  (! '}'  ',' [space]  prop4 )]  [space] '}' {pin(".*")=1 extends=elementJson}
+prop ::= [] name ':' values {pin=1 recoverWhile=recover}
+prop6 ::= [] name ':' values {pin=1 recoverWhile=recover}
+prop1 ::= [] identifier ':' values {pin=1 recoverWhile=recover}
+prop2 ::=  value ':' values {pin=1 recoverWhile=recover}
+prop3 ::=  waitFor ':' values
+prop4::= referTo ':' values
+private recover ::= !(',' | ']' | '}' | '[' | '{' | space)
