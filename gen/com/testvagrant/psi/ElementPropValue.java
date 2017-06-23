@@ -5,9 +5,12 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface ElementProp1 extends PsiElement {
+public interface ElementPropValue extends PsiElement {
 
-  @Nullable
+  @NotNull
+  ElementPropID getPropID();
+
+  @NotNull
   ElementValues getValues();
 
 }

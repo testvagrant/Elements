@@ -1,0 +1,16 @@
+{
+    elements:[
+        {
+            name:"home",
+            identifier:"id",
+            value:"id_home",
+            waitFor:"presence"
+        },
+        {
+            name:"login",
+            identifier:"css",
+            value:"div login",
+            waitFor:"visibility"
+        }
+    ]
+}

@@ -14,7 +14,12 @@
      tokens = [
         space='regexp:\s+|\n|\t'
         string = "regexp:\"[^\"]*\"|'[^']*'"
-        elementValue="elements"
+        elementValue="\"elements\""
+        elementName="\"elementName\""
+        elementId="\"identifier\""
+        elementVal="\"value\""
+        elementWaitFor="\"waitFor\""
+        elementReference="\"referTo\""
         number = "regexp:(\+|\-)?\p{Digit}*"
         id = "regexp:\p{Alpha}\w*"
         comma = ","
@@ -34,12 +39,8 @@ elementsObject ::= '{' [space] [! '}'  elementValue ':' [space] elementsArray ] 
 values ::= string
 elementsArray::='['[!']' item (!']' ',' item) *] [space]']'  {pin(".*")=1 extends=elementsArray}
 private item ::= [space] elementJson [space] {recoverWhile=recover}
-elementObject ::= '{' [space] [! '}'  prop  (! '}'  ',' [space]  prop1 ) (! '}'  ',' [space] prop2 ) (! '}' ',' [space] prop3 ) ]  [space] '}' {pin(".*")=1 extends=elementJson}
-elementObject1 ::= '{' [space] [! '}'  prop6  (! '}'  ',' [space]  prop4 )]  [space] '}' {pin(".*")=1 extends=elementJson}
-prop ::= [] name ':' values {pin=1 recoverWhile=recover}
-prop6 ::= [] name ':' values {pin=1 recoverWhile=recover}
-prop1 ::= [] identifier ':' values {pin=1 recoverWhile=recover}
-prop2 ::=  value ':' values {pin=1 recoverWhile=recover}
-prop3 ::=  waitFor ':' values
-prop4::= referTo ':' values
+elementObject ::= '{' [space] [!'}' propValue (!'}' ',' [space] propValue) *] [space] '}' {pin(".*")=4 extends=elementJson}
+//propValue ::= prop | identifier ':' values | prop2 | prop3 | prop4 | prop5
+propValue ::=  propID ':' values
+propID ::= elementName | elementId | elementVal | elementWaitFor | elementReference
 private recover ::= !(',' | ']' | '}' | '[' | '{' | space)

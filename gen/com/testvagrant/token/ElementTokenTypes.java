@@ -15,13 +15,8 @@ public interface ElementTokenTypes {
   IElementType ELEMENTS_OBJECT = new ElementsElementType("ELEMENTS_OBJECT");
   IElementType ELEMENT_JSON = new ElementsElementType("ELEMENT_JSON");
   IElementType ELEMENT_OBJECT = new ElementsElementType("ELEMENT_OBJECT");
-  IElementType ELEMENT_OBJECT_1 = new ElementsElementType("ELEMENT_OBJECT_1");
-  IElementType PROP = new ElementsElementType("PROP");
-  IElementType PROP_1 = new ElementsElementType("PROP_1");
-  IElementType PROP_2 = new ElementsElementType("PROP_2");
-  IElementType PROP_3 = new ElementsElementType("PROP_3");
-  IElementType PROP_4 = new ElementsElementType("PROP_4");
-  IElementType PROP_6 = new ElementsElementType("PROP_6");
+  IElementType PROP_ID = new ElementsElementType("PROP_ID");
+  IElementType PROP_VALUE = new ElementsElementType("PROP_VALUE");
   IElementType VALUES = new ElementsElementType("VALUES");
 
   IElementType BRACE1 = new ElementsTokenType("{");
@@ -30,17 +25,17 @@ public interface ElementTokenTypes {
   IElementType BRACK2 = new ElementsTokenType("]");
   IElementType COLON = new ElementsTokenType(":");
   IElementType COMMA = new ElementsTokenType(",");
-  IElementType ELEMENTVALUE = new ElementsTokenType("elements");
+  IElementType ELEMENTID = new ElementsTokenType("\"identifier\"");
+  IElementType ELEMENTNAME = new ElementsTokenType("\"elementName\"");
+  IElementType ELEMENTREFERENCE = new ElementsTokenType("\"referTo\"");
+  IElementType ELEMENTVAL = new ElementsTokenType("\"value\"");
+  IElementType ELEMENTVALUE = new ElementsTokenType("\"elements\"");
+  IElementType ELEMENTWAITFOR = new ElementsTokenType("\"waitFor\"");
   IElementType ID = new ElementsTokenType("id");
-  IElementType IDENTIFIER = new ElementsTokenType("identifier");
-  IElementType NAME = new ElementsTokenType("name");
   IElementType NUMBER = new ElementsTokenType("number");
   IElementType QUOTE = new ElementsTokenType("quote");
-  IElementType REFERTO = new ElementsTokenType("referTo");
   IElementType SPACE = new ElementsTokenType("space");
   IElementType STRING = new ElementsTokenType("string");
-  IElementType VALUE = new ElementsTokenType("value");
-  IElementType WAITFOR = new ElementsTokenType("waitFor");
 
   class Factory {
     public static PsiElement createElement(ASTNode node) {
@@ -57,26 +52,11 @@ public interface ElementTokenTypes {
       else if (type == ELEMENT_OBJECT) {
         return new ElementElementObjectImpl(node);
       }
-      else if (type == ELEMENT_OBJECT_1) {
-        return new ElementElementObject1Impl(node);
+      else if (type == PROP_ID) {
+        return new ElementPropIDImpl(node);
       }
-      else if (type == PROP) {
-        return new ElementPropImpl(node);
-      }
-      else if (type == PROP_1) {
-        return new ElementProp1Impl(node);
-      }
-      else if (type == PROP_2) {
-        return new ElementProp2Impl(node);
-      }
-      else if (type == PROP_3) {
-        return new ElementProp3Impl(node);
-      }
-      else if (type == PROP_4) {
-        return new ElementProp4Impl(node);
-      }
-      else if (type == PROP_6) {
-        return new ElementProp6Impl(node);
+      else if (type == PROP_VALUE) {
+        return new ElementPropValueImpl(node);
       }
       else if (type == VALUES) {
         return new ElementValuesImpl(node);

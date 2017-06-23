@@ -45,7 +45,7 @@ public class ElementsSyntaxHighlighter extends SyntaxHighlighterBase {
     @NotNull
     @Override
     public TextAttributesKey[] getTokenHighlights(IElementType tokenType) {
-        if (tokenType.equals(ElementTokenTypes.ELEMENTVALUE) || tokenType.equals(ElementTokenTypes.NAME) || tokenType.equals(ElementTokenTypes.IDENTIFIER) || tokenType.equals(ElementTokenTypes.VALUE) || tokenType.equals(ElementTokenTypes.REFERTO) || tokenType.equals(ElementTokenTypes.WAITFOR) ) {
+        if (tokenType.equals(ElementTokenTypes.ELEMENTVALUE) || tokenType.equals(ElementTokenTypes.ELEMENTNAME) || tokenType.equals(ElementTokenTypes.ELEMENTVAL) || tokenType.equals(ElementTokenTypes.ELEMENTREFERENCE) || tokenType.equals(ElementTokenTypes.ELEMENTID) || tokenType.equals(ElementTokenTypes.ELEMENTWAITFOR)) {
             return KEY_KEYS;
         } else if (tokenType.equals(ElementTokenTypes.STRING)) {
             return VALUE_KEYS;

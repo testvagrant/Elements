@@ -26,27 +26,9 @@ public class ElementElementObjectImpl extends ElementElementJsonImpl implements 
   }
 
   @Override
-  @Nullable
-  public ElementProp getProp() {
-    return findChildByClass(ElementProp.class);
-  }
-
-  @Override
-  @Nullable
-  public ElementProp1 getProp1() {
-    return findChildByClass(ElementProp1.class);
-  }
-
-  @Override
-  @Nullable
-  public ElementProp2 getProp2() {
-    return findChildByClass(ElementProp2.class);
-  }
-
-  @Override
-  @Nullable
-  public ElementProp3 getProp3() {
-    return findChildByClass(ElementProp3.class);
+  @NotNull
+  public List<ElementPropValue> getPropValueList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, ElementPropValue.class);
   }
 
 }

@@ -29,9 +29,6 @@ public class ElementsParser implements PsiParser, LightPsiParser {
     else if (t == ELEMENT_OBJECT) {
       r = elementObject(b, 0);
     }
-    else if (t == ELEMENT_OBJECT_1) {
-      r = elementObject1(b, 0);
-    }
     else if (t == ELEMENTS) {
       r = elements(b, 0);
     }
@@ -41,23 +38,11 @@ public class ElementsParser implements PsiParser, LightPsiParser {
     else if (t == ELEMENTS_OBJECT) {
       r = elementsObject(b, 0);
     }
-    else if (t == PROP) {
-      r = prop(b, 0);
+    else if (t == PROP_ID) {
+      r = propID(b, 0);
     }
-    else if (t == PROP_1) {
-      r = prop1(b, 0);
-    }
-    else if (t == PROP_2) {
-      r = prop2(b, 0);
-    }
-    else if (t == PROP_3) {
-      r = prop3(b, 0);
-    }
-    else if (t == PROP_4) {
-      r = prop4(b, 0);
-    }
-    else if (t == PROP_6) {
-      r = prop6(b, 0);
+    else if (t == PROP_VALUE) {
+      r = propValue(b, 0);
     }
     else if (t == VALUES) {
       r = values(b, 0);
@@ -73,7 +58,7 @@ public class ElementsParser implements PsiParser, LightPsiParser {
   }
 
   public static final TokenSet[] EXTENDS_SETS_ = new TokenSet[] {
-    create_token_set_(ELEMENTS_OBJECT, ELEMENT_JSON, ELEMENT_OBJECT, ELEMENT_OBJECT_1),
+    create_token_set_(ELEMENTS_OBJECT, ELEMENT_JSON, ELEMENT_OBJECT),
   };
 
   /* ********************************************************** */
@@ -89,18 +74,18 @@ public class ElementsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // '{' [space] [! '}'  prop  (! '}'  ',' [space]  prop1 ) (! '}'  ',' [space] prop2 ) (! '}' ',' [space] prop3 ) ]  [space] '}'
+  // '{' [space] [!'}' propValue (!'}' ',' [space] propValue) *] [space] '}'
   public static boolean elementObject(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "elementObject")) return false;
     if (!nextTokenIs(b, BRACE1)) return false;
     boolean r, p;
     Marker m = enter_section_(b, l, _NONE_, ELEMENT_OBJECT, null);
     r = consumeToken(b, BRACE1);
-    p = r; // pin = 1
-    r = r && report_error_(b, elementObject_1(b, l + 1));
-    r = p && report_error_(b, elementObject_2(b, l + 1)) && r;
-    r = p && report_error_(b, elementObject_3(b, l + 1)) && r;
-    r = p && consumeToken(b, BRACE2) && r;
+    r = r && elementObject_1(b, l + 1);
+    r = r && elementObject_2(b, l + 1);
+    r = r && elementObject_3(b, l + 1);
+    p = r; // pin = 4
+    r = r && consumeToken(b, BRACE2);
     exit_section_(b, l, m, r, p, null);
     return r || p;
   }
@@ -112,29 +97,26 @@ public class ElementsParser implements PsiParser, LightPsiParser {
     return true;
   }
 
-  // [! '}'  prop  (! '}'  ',' [space]  prop1 ) (! '}'  ',' [space] prop2 ) (! '}' ',' [space] prop3 ) ]
+  // [!'}' propValue (!'}' ',' [space] propValue) *]
   private static boolean elementObject_2(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "elementObject_2")) return false;
     elementObject_2_0(b, l + 1);
     return true;
   }
 
-  // ! '}'  prop  (! '}'  ',' [space]  prop1 ) (! '}'  ',' [space] prop2 ) (! '}' ',' [space] prop3 )
+  // !'}' propValue (!'}' ',' [space] propValue) *
   private static boolean elementObject_2_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "elementObject_2_0")) return false;
-    boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_);
+    boolean r;
+    Marker m = enter_section_(b);
     r = elementObject_2_0_0(b, l + 1);
-    p = r; // pin = 1
-    r = r && report_error_(b, prop(b, l + 1));
-    r = p && report_error_(b, elementObject_2_0_2(b, l + 1)) && r;
-    r = p && report_error_(b, elementObject_2_0_3(b, l + 1)) && r;
-    r = p && elementObject_2_0_4(b, l + 1) && r;
-    exit_section_(b, l, m, r, p, null);
-    return r || p;
+    r = r && propValue(b, l + 1);
+    r = r && elementObject_2_0_2(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
   }
 
-  // ! '}'
+  // !'}'
   private static boolean elementObject_2_0_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "elementObject_2_0_0")) return false;
     boolean r;
@@ -144,54 +126,34 @@ public class ElementsParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // ! '}'  ',' [space]  prop1
+  // (!'}' ',' [space] propValue) *
   private static boolean elementObject_2_0_2(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "elementObject_2_0_2")) return false;
-    boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_);
-    r = elementObject_2_0_2_0(b, l + 1);
-    p = r; // pin = 1
-    r = r && report_error_(b, consumeToken(b, COMMA));
-    r = p && report_error_(b, elementObject_2_0_2_2(b, l + 1)) && r;
-    r = p && prop1(b, l + 1) && r;
-    exit_section_(b, l, m, r, p, null);
-    return r || p;
+    int c = current_position_(b);
+    while (true) {
+      if (!elementObject_2_0_2_0(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "elementObject_2_0_2", c)) break;
+      c = current_position_(b);
+    }
+    return true;
   }
 
-  // ! '}'
+  // !'}' ',' [space] propValue
   private static boolean elementObject_2_0_2_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "elementObject_2_0_2_0")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NOT_);
-    r = !consumeToken(b, BRACE2);
-    exit_section_(b, l, m, r, false, null);
+    Marker m = enter_section_(b);
+    r = elementObject_2_0_2_0_0(b, l + 1);
+    r = r && consumeToken(b, COMMA);
+    r = r && elementObject_2_0_2_0_2(b, l + 1);
+    r = r && propValue(b, l + 1);
+    exit_section_(b, m, null, r);
     return r;
   }
 
-  // [space]
-  private static boolean elementObject_2_0_2_2(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "elementObject_2_0_2_2")) return false;
-    consumeToken(b, SPACE);
-    return true;
-  }
-
-  // ! '}'  ',' [space] prop2
-  private static boolean elementObject_2_0_3(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "elementObject_2_0_3")) return false;
-    boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_);
-    r = elementObject_2_0_3_0(b, l + 1);
-    p = r; // pin = 1
-    r = r && report_error_(b, consumeToken(b, COMMA));
-    r = p && report_error_(b, elementObject_2_0_3_2(b, l + 1)) && r;
-    r = p && prop2(b, l + 1) && r;
-    exit_section_(b, l, m, r, p, null);
-    return r || p;
-  }
-
-  // ! '}'
-  private static boolean elementObject_2_0_3_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "elementObject_2_0_3_0")) return false;
+  // !'}'
+  private static boolean elementObject_2_0_2_0_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "elementObject_2_0_2_0_0")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NOT_);
     r = !consumeToken(b, BRACE2);
@@ -200,39 +162,8 @@ public class ElementsParser implements PsiParser, LightPsiParser {
   }
 
   // [space]
-  private static boolean elementObject_2_0_3_2(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "elementObject_2_0_3_2")) return false;
-    consumeToken(b, SPACE);
-    return true;
-  }
-
-  // ! '}' ',' [space] prop3
-  private static boolean elementObject_2_0_4(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "elementObject_2_0_4")) return false;
-    boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_);
-    r = elementObject_2_0_4_0(b, l + 1);
-    p = r; // pin = 1
-    r = r && report_error_(b, consumeToken(b, COMMA));
-    r = p && report_error_(b, elementObject_2_0_4_2(b, l + 1)) && r;
-    r = p && prop3(b, l + 1) && r;
-    exit_section_(b, l, m, r, p, null);
-    return r || p;
-  }
-
-  // ! '}'
-  private static boolean elementObject_2_0_4_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "elementObject_2_0_4_0")) return false;
-    boolean r;
-    Marker m = enter_section_(b, l, _NOT_);
-    r = !consumeToken(b, BRACE2);
-    exit_section_(b, l, m, r, false, null);
-    return r;
-  }
-
-  // [space]
-  private static boolean elementObject_2_0_4_2(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "elementObject_2_0_4_2")) return false;
+  private static boolean elementObject_2_0_2_0_2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "elementObject_2_0_2_0_2")) return false;
     consumeToken(b, SPACE);
     return true;
   }
@@ -240,98 +171,6 @@ public class ElementsParser implements PsiParser, LightPsiParser {
   // [space]
   private static boolean elementObject_3(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "elementObject_3")) return false;
-    consumeToken(b, SPACE);
-    return true;
-  }
-
-  /* ********************************************************** */
-  // '{' [space] [! '}'  prop6  (! '}'  ',' [space]  prop4 )]  [space] '}'
-  public static boolean elementObject1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "elementObject1")) return false;
-    if (!nextTokenIs(b, BRACE1)) return false;
-    boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_, ELEMENT_OBJECT_1, null);
-    r = consumeToken(b, BRACE1);
-    p = r; // pin = 1
-    r = r && report_error_(b, elementObject1_1(b, l + 1));
-    r = p && report_error_(b, elementObject1_2(b, l + 1)) && r;
-    r = p && report_error_(b, elementObject1_3(b, l + 1)) && r;
-    r = p && consumeToken(b, BRACE2) && r;
-    exit_section_(b, l, m, r, p, null);
-    return r || p;
-  }
-
-  // [space]
-  private static boolean elementObject1_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "elementObject1_1")) return false;
-    consumeToken(b, SPACE);
-    return true;
-  }
-
-  // [! '}'  prop6  (! '}'  ',' [space]  prop4 )]
-  private static boolean elementObject1_2(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "elementObject1_2")) return false;
-    elementObject1_2_0(b, l + 1);
-    return true;
-  }
-
-  // ! '}'  prop6  (! '}'  ',' [space]  prop4 )
-  private static boolean elementObject1_2_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "elementObject1_2_0")) return false;
-    boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_);
-    r = elementObject1_2_0_0(b, l + 1);
-    p = r; // pin = 1
-    r = r && report_error_(b, prop6(b, l + 1));
-    r = p && elementObject1_2_0_2(b, l + 1) && r;
-    exit_section_(b, l, m, r, p, null);
-    return r || p;
-  }
-
-  // ! '}'
-  private static boolean elementObject1_2_0_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "elementObject1_2_0_0")) return false;
-    boolean r;
-    Marker m = enter_section_(b, l, _NOT_);
-    r = !consumeToken(b, BRACE2);
-    exit_section_(b, l, m, r, false, null);
-    return r;
-  }
-
-  // ! '}'  ',' [space]  prop4
-  private static boolean elementObject1_2_0_2(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "elementObject1_2_0_2")) return false;
-    boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_);
-    r = elementObject1_2_0_2_0(b, l + 1);
-    p = r; // pin = 1
-    r = r && report_error_(b, consumeToken(b, COMMA));
-    r = p && report_error_(b, elementObject1_2_0_2_2(b, l + 1)) && r;
-    r = p && prop4(b, l + 1) && r;
-    exit_section_(b, l, m, r, p, null);
-    return r || p;
-  }
-
-  // ! '}'
-  private static boolean elementObject1_2_0_2_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "elementObject1_2_0_2_0")) return false;
-    boolean r;
-    Marker m = enter_section_(b, l, _NOT_);
-    r = !consumeToken(b, BRACE2);
-    exit_section_(b, l, m, r, false, null);
-    return r;
-  }
-
-  // [space]
-  private static boolean elementObject1_2_0_2_2(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "elementObject1_2_0_2_2")) return false;
-    consumeToken(b, SPACE);
-    return true;
-  }
-
-  // [space]
-  private static boolean elementObject1_3(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "elementObject1_3")) return false;
     consumeToken(b, SPACE);
     return true;
   }
@@ -534,105 +373,31 @@ public class ElementsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // [] name ':' values
-  public static boolean prop(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "prop")) return false;
-    boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_, PROP, "<prop>");
-    r = prop_0(b, l + 1);
-    p = r; // pin = 1
-    r = r && report_error_(b, consumeToken(b, NAME));
-    r = p && report_error_(b, consumeToken(b, COLON)) && r;
-    r = p && values(b, l + 1) && r;
-    exit_section_(b, l, m, r, p, recover_parser_);
-    return r || p;
-  }
-
-  // []
-  private static boolean prop_0(PsiBuilder b, int l) {
-    return true;
-  }
-
-  /* ********************************************************** */
-  // [] identifier ':' values
-  public static boolean prop1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "prop1")) return false;
-    boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_, PROP_1, "<prop 1>");
-    r = prop1_0(b, l + 1);
-    p = r; // pin = 1
-    r = r && report_error_(b, consumeToken(b, IDENTIFIER));
-    r = p && report_error_(b, consumeToken(b, COLON)) && r;
-    r = p && values(b, l + 1) && r;
-    exit_section_(b, l, m, r, p, recover_parser_);
-    return r || p;
-  }
-
-  // []
-  private static boolean prop1_0(PsiBuilder b, int l) {
-    return true;
-  }
-
-  /* ********************************************************** */
-  // value ':' values
-  public static boolean prop2(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "prop2")) return false;
-    boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_, PROP_2, "<prop 2>");
-    r = consumeToken(b, VALUE);
-    p = r; // pin = 1
-    r = r && report_error_(b, consumeToken(b, COLON));
-    r = p && values(b, l + 1) && r;
-    exit_section_(b, l, m, r, p, recover_parser_);
-    return r || p;
-  }
-
-  /* ********************************************************** */
-  // waitFor ':' values
-  public static boolean prop3(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "prop3")) return false;
-    if (!nextTokenIs(b, WAITFOR)) return false;
+  // elementName | elementId | elementVal | elementWaitFor | elementReference
+  public static boolean propID(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "propID")) return false;
     boolean r;
-    Marker m = enter_section_(b);
-    r = consumeToken(b, WAITFOR);
-    r = r && consumeToken(b, COLON);
-    r = r && values(b, l + 1);
-    exit_section_(b, m, PROP_3, r);
+    Marker m = enter_section_(b, l, _NONE_, PROP_ID, "<prop id>");
+    r = consumeToken(b, ELEMENTNAME);
+    if (!r) r = consumeToken(b, ELEMENTID);
+    if (!r) r = consumeToken(b, ELEMENTVAL);
+    if (!r) r = consumeToken(b, ELEMENTWAITFOR);
+    if (!r) r = consumeToken(b, ELEMENTREFERENCE);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
   /* ********************************************************** */
-  // referTo ':' values
-  public static boolean prop4(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "prop4")) return false;
-    if (!nextTokenIs(b, REFERTO)) return false;
+  // propID ':' values
+  public static boolean propValue(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "propValue")) return false;
     boolean r;
-    Marker m = enter_section_(b);
-    r = consumeToken(b, REFERTO);
+    Marker m = enter_section_(b, l, _NONE_, PROP_VALUE, "<prop value>");
+    r = propID(b, l + 1);
     r = r && consumeToken(b, COLON);
     r = r && values(b, l + 1);
-    exit_section_(b, m, PROP_4, r);
+    exit_section_(b, l, m, r, false, null);
     return r;
-  }
-
-  /* ********************************************************** */
-  // [] name ':' values
-  public static boolean prop6(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "prop6")) return false;
-    boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_, PROP_6, "<prop 6>");
-    r = prop6_0(b, l + 1);
-    p = r; // pin = 1
-    r = r && report_error_(b, consumeToken(b, NAME));
-    r = p && report_error_(b, consumeToken(b, COLON)) && r;
-    r = p && values(b, l + 1) && r;
-    exit_section_(b, l, m, r, p, recover_parser_);
-    return r || p;
-  }
-
-  // []
-  private static boolean prop6_0(PsiBuilder b, int l) {
-    return true;
   }
 
   /* ********************************************************** */

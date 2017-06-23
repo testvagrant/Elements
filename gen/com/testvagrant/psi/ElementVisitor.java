@@ -15,10 +15,6 @@ public class ElementVisitor extends PsiElementVisitor {
     visitElementJson(o);
   }
 
-  public void visitElementObject1(@NotNull ElementElementObject1 o) {
-    visitElementJson(o);
-  }
-
   public void visitElements(@NotNull ElementElements o) {
     visitPsiElement(o);
   }
@@ -31,27 +27,11 @@ public class ElementVisitor extends PsiElementVisitor {
     visitElementJson(o);
   }
 
-  public void visitProp(@NotNull ElementProp o) {
+  public void visitPropID(@NotNull ElementPropID o) {
     visitPsiElement(o);
   }
 
-  public void visitProp1(@NotNull ElementProp1 o) {
-    visitPsiElement(o);
-  }
-
-  public void visitProp2(@NotNull ElementProp2 o) {
-    visitPsiElement(o);
-  }
-
-  public void visitProp3(@NotNull ElementProp3 o) {
-    visitPsiElement(o);
-  }
-
-  public void visitProp4(@NotNull ElementProp4 o) {
-    visitPsiElement(o);
-  }
-
-  public void visitProp6(@NotNull ElementProp6 o) {
+  public void visitPropValue(@NotNull ElementPropValue o) {
     visitPsiElement(o);
   }
 

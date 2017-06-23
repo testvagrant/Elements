@@ -7,16 +7,7 @@ import com.intellij.psi.PsiElement;
 
 public interface ElementElementObject extends ElementElementJson {
 
-  @Nullable
-  ElementProp getProp();
-
-  @Nullable
-  ElementProp1 getProp1();
-
-  @Nullable
-  ElementProp2 getProp2();
-
-  @Nullable
-  ElementProp3 getProp3();
+  @NotNull
+  List<ElementPropValue> getPropValueList();
 
 }

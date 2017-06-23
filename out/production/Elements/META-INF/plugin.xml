@@ -1,7 +1,7 @@
 <idea-plugin version="2">
   <id>com.testvagrant.optimus.elements</id>
   <name>Elements</name>
-  <version>1.0</version>
+  <version>1.1</version>
   <vendor email="optimus@testvagrant.com" url="http://www.testvagrant.com">Testvagrant</vendor>
 
   <description><![CDATA[
@@ -18,9 +18,9 @@
 
   <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
        on how to target different products -->
-  <!-- uncomment to enable plugin in all products
+  <!-- uncomment to enable plugin in all products-->
   <depends>com.intellij.modules.lang</depends>
-  -->
+
 
   <extensions defaultExtensionNs="com.intellij">
    <fileTypeFactory implementation="com.testvagrant.ElementsFileTypeFactory"/>

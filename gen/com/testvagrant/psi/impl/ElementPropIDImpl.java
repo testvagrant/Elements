@@ -11,25 +11,19 @@ import static com.testvagrant.token.ElementTokenTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.testvagrant.psi.*;
 
-public class ElementProp2Impl extends ASTWrapperPsiElement implements ElementProp2 {
+public class ElementPropIDImpl extends ASTWrapperPsiElement implements ElementPropID {
 
-  public ElementProp2Impl(ASTNode node) {
+  public ElementPropIDImpl(ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull ElementVisitor visitor) {
-    visitor.visitProp2(this);
+    visitor.visitPropID(this);
   }
 
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof ElementVisitor) accept((ElementVisitor)visitor);
     else super.accept(visitor);
-  }
-
-  @Override
-  @Nullable
-  public ElementValues getValues() {
-    return findChildByClass(ElementValues.class);
   }
 
 }
